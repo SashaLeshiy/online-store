@@ -25,7 +25,7 @@ npm run dev
 ```sh
 npm run build
 ```
-### 
+### leshiy-store.netlify.app
 
 ### Contacts
 
