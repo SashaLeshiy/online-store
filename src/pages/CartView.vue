@@ -12,11 +12,11 @@ defineComponent({
 
 const products = ref<Product[]>([])
 
-products.value = JSON.parse(localStorage.getItem('cart') || '')
+products.value = JSON.parse(localStorage.getItem('cart')!)
 
 const removeCardInCart = (id: number) => {
   removeCard(id)
-  products.value = JSON.parse(localStorage.getItem('cart') || '')
+  products.value = JSON.parse(localStorage.getItem('cart')!)
 }
 
 const setTotalPrice = computed(() => {

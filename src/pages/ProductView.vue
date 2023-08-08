@@ -52,12 +52,12 @@ defineComponent({
 
     const addCardInCart = (card: Product) => {
         addCard(card)
-        cart.value = JSON.parse(localStorage.getItem('cart') || '')
+        cart.value = JSON.parse(localStorage.getItem('cart')!)
     }
 
     const removeCardInCart = (id: number) => {
         removeCard(id)
-        cart.value = JSON.parse(localStorage.getItem('cart') || '')
+        cart.value = JSON.parse(localStorage.getItem('cart')!)
     }
 
     const onImgLoad = () => {
