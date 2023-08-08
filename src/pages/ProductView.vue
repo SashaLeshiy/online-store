@@ -20,7 +20,7 @@ defineComponent({
 })
     const modules = [Navigation]
 
-    const cart = ref<Product[]>(JSON.parse(localStorage.getItem('cart') || ''))
+    const cart = ref<Product[]>(JSON.parse(localStorage.getItem('cart')!))
 
     const route = useRoute()
     const product = ref<Product>()

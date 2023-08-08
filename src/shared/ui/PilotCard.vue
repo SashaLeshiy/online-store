@@ -12,7 +12,7 @@ defineProps({
   }
 })
 
-const cart = ref<Product[]>(JSON.parse(localStorage.getItem('cart') || ''))
+const cart = ref<Product[]>(JSON.parse(localStorage.getItem('cart')!))
 
 const isProductCart = (id: number) => {
   if (!localStorage.getItem('cart')) {
