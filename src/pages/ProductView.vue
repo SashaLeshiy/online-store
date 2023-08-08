@@ -107,9 +107,10 @@ defineComponent({
                 <swiper-slide>
                     <img :src="product.image" @error="altImg" class="product-view__img" />
                 </swiper-slide>
-                <swiper-slide>
+                <swiper-slide> 
+                    <!-- имитация загрузки битой картинки и замена на дефолтную -->
                     <img
-                        src="http://polet.com/image.png"
+                        src="https://leshiy.com/image.png" 
                         @error="altImg"
                         @load="onImgLoad()"
                         class="product-view__img"
