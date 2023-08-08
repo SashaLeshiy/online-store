@@ -19,7 +19,7 @@ const isProductCart = (id: number) => {
     localStorage.setItem('cart', JSON.stringify([]))
   }
 
-  const cardInCart = cart.value.find((elem) => elem.id === id)
+  const cardInCart = cart.value?.find((elem) => elem.id === id)
 
   return Boolean(cardInCart)
 }
