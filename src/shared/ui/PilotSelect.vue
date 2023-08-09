@@ -8,7 +8,9 @@ defineProps({
     required: true
   }
 })
-const emit = defineEmits(['selectItem'])
+const emit = defineEmits<{
+  (e: 'selectItem', item?: Category): void
+}>()
 
 const showOptions = ref(false)
 const selectTypeId = ref()

@@ -2,7 +2,9 @@
 import { ref } from 'vue'
 import MENU from '@/shared/constants/menu'
 
-const emit = defineEmits(['toggle-modal'])
+const emit = defineEmits<{
+  (e: 'toggle-modal'): void
+}>()
 
 const menu = ref(MENU)
 

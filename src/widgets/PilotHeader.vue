@@ -4,7 +4,7 @@ import PilotNavigation from '@/shared/ui/PilotNavigation.vue'
 import PilotModal from '@/shared/ui/PilotModal.vue'
 import PilotMainContainer from '../shared/ui/PilotMainContainer.vue'
 
-const isModalOpen = ref(false)
+const isModalOpen = ref<Boolean>(false)
 
 const toggleModal = () => {
   isModalOpen.value = !isModalOpen.value

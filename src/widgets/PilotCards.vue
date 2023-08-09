@@ -22,7 +22,7 @@ const loadData = () => {
     .catch((error) => console.log(error.message))
 }
 
-const selectItem = (item: Product) => {
+const selectItem = (item?: Category) => {
   if (item) {
     category.value = item.id
     switch (item.id) {

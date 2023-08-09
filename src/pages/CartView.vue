@@ -20,7 +20,7 @@ const removeCardInCart = (id: number) => {
 }
 
 const setTotalPrice = computed(() => {
-  let totalPrice = 0
+  let totalPrice: number = 0
   products.value.forEach((elem: { price: number; }) => {
     totalPrice += elem.price
   })

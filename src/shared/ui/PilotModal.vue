@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import MENU from '@/shared/constants/menu'
+import { type Menu } from '@/widgets/Menu'
 
-const emit = defineEmits(['toggle-modal'])
+const emit = defineEmits<{
+  (e: 'toggle-modal'): void
+}>()
 
-const menu = ref(MENU)
+const menu = ref<Menu[]>(MENU)
 
 const toggleModal = () => {
   emit('toggle-modal')
