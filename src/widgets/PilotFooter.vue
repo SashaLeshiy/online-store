@@ -7,7 +7,7 @@ import PilotMainContainer from '../shared/ui/PilotMainContainer.vue'
   <section class="pilot-footer">
     <PilotMainContainer>
       <div class="pilot-footer__copyright">
-        Copyright © 2023 pilot-store
+        Copyright © 2023 leshiy-store
       </div>
     </PilotMainContainer>
   </section>
