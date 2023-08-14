@@ -9,7 +9,7 @@ defineProps({
   }
 })
 const emit = defineEmits<{
-  (e: 'selectItem', item?: Category): void
+  selectItem: [item?: Category]
 }>()
 
 const showOptions = ref(false)
