@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, defineComponent } from 'vue'
+import { useCartStore } from '@/app/stores/cart'
 import PilotMainContainer from '../shared/ui/PilotMainContainer.vue'
 import PilotButton from '@/shared/ui/PilotButton.vue'
 import removeCard from '@/shared/utils/removeCard'
@@ -12,11 +13,14 @@ defineComponent({
 
 const products = ref<Product[]>([])
 
+const storeCart = useCartStore()
+
 products.value = JSON.parse(localStorage.getItem('cart')!)
 
 const removeCardInCart = (id: number) => {
   removeCard(id)
   products.value = JSON.parse(localStorage.getItem('cart')!)
+  storeCart.setCart()
 }
 
 const setTotalPrice = computed(() => {

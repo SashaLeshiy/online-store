@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, defineComponent } from 'vue'
+import { useCartStore } from '@/app/stores/cart'
 import { useRoute } from 'vue-router';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import 'swiper/css';
@@ -19,6 +20,8 @@ defineComponent({
     SwiperSlide
 })
     const modules = [Navigation]
+
+    const storeCart = useCartStore()
 
     const cart = ref<Product[]>(JSON.parse(localStorage.getItem('cart')!))
 
@@ -53,11 +56,13 @@ defineComponent({
     const addCardInCart = (card: Product) => {
         addCard(card)
         cart.value = JSON.parse(localStorage.getItem('cart')!)
+        storeCart.setCart()
     }
 
     const removeCardInCart = (id: number) => {
         removeCard(id)
         cart.value = JSON.parse(localStorage.getItem('cart')!)
+        storeCart.setCart()
     }
 
     const onImgLoad = () => {

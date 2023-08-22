@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, type PropType } from 'vue'
+import { useCartStore } from '@/app/stores/cart'
 import addCard from '@/shared/utils/addCart'
 import removeCard from '@/shared/utils/removeCard'
 import PilotButton from '@/shared/ui/PilotButton.vue'
@@ -11,6 +12,8 @@ defineProps({
     required: true
   }
 })
+
+const storeCart = useCartStore()
 
 const cart = ref<Product[]>(JSON.parse(localStorage.getItem('cart')!))
 
@@ -36,11 +39,13 @@ const getImgUrl = (imageName: string) => {
 const addCardInCart = (card: Product) => {
   addCard(card)
   cart.value = JSON.parse(localStorage.getItem('cart')!)
+  storeCart.setCart()
 }
 
 const removeCardInCart = (id: number) => {
   removeCard(id)
   cart.value = JSON.parse(localStorage.getItem('cart')!)
+  storeCart.setCart()
 }
 </script>
 

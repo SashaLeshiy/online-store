@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useCartStore } from '@/app/stores/cart'
 import MENU from '@/shared/constants/menu'
 
 const emit = defineEmits<{
@@ -7,6 +8,8 @@ const emit = defineEmits<{
 }>()
 
 const menu = ref(MENU)
+
+const storeCart = useCartStore()
 
 const toggleModal = () => {
   emit('toggle-modal')
@@ -27,7 +30,7 @@ const toggleModal = () => {
           class="pilot-navigation__button"
           :class="[isActive && 'pilot-navigation__button-active']"
         >
-          {{ item.name }}
+          {{ item.name }}<sup class="pilot-navigation__button-sup" v-if="item.name === 'Корзина' && storeCart.cart">{{ storeCart.cart }}</sup>
         </button>
       </router-link>
     </div>
@@ -63,6 +66,10 @@ const toggleModal = () => {
 
   &__button-active {
     color: #00a76b;
+  }
+
+  &__button-sup {
+    color: #db1c1c
   }
 
   &__icon {

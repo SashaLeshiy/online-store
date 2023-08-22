@@ -9,6 +9,8 @@ const emit = defineEmits<{
 
 const menu = ref<Menu[]>(MENU)
 
+const lengthCart: number = JSON.parse(localStorage.getItem('cart')!).length 
+
 const toggleModal = () => {
   emit('toggle-modal')
 }
@@ -35,7 +37,7 @@ const toggleModal = () => {
             :class="[isActive && 'pilot-modal__button-active']"
             @click="toggleModal"
           >
-            {{ item.name }}
+            {{ item.name }}<sup v-if="item.name === 'Корзина' && lengthCart">{{ lengthCart }}</sup>
           </button>
         </router-link>
       </div>
