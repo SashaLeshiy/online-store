@@ -4,6 +4,7 @@
 - Vue 3
 - Vite
 - Typescript
+- Pinia
 - Fake Api
 - Composition Api
 - Feature-Sliced Design
