@@ -1,45 +1,46 @@
 <script setup lang="ts">
-import { onMounted, ref, computed } from 'vue'
+import { ref, computed } from 'vue'
 import PilotCard from '@/shared/ui/PilotCard.vue'
 import PilotSelect from '../shared/ui/PilotSelect.vue'
 import PilotMainContainer from '../shared/ui/PilotMainContainer.vue'
+import PilotLoader from '../shared/ui/PilotLoader.vue'
+import { useCardsStore } from '@/app/stores/cards'
 import CATEGORY from '@/shared/constants/category'
 import { type Product } from '@/entities/Product'
 import { type Category } from '@/entities/Category'
 
-const cards = ref<Product[]>([])
 const searchQuery = ref('')
 const categories = ref<Category[]>(CATEGORY)
 const category = ref()
 const filterCards = ref<Product[]>([])
 
-const loadData = () => {
-  fetch('https://fakestoreapi.com/products')
-    .then((res) => res.json())
-    .then((json) => {
-      cards.value = json
-    })
-    .catch((error) => console.log(error.message))
-}
+const products = useCardsStore()
+
+products.getCards()
+
+
+const getProducts = computed((): Product[] => {
+  return products.cards
+})
 
 const selectItem = (item?: Category) => {
   if (item) {
     category.value = item.id
     switch (item.id) {
       case 1: {
-        filterCards.value = cards.value.filter((elem) => elem.category === "men's clothing")
+        filterCards.value = products.cards.filter((elem) => elem.category === "men's clothing")
         break
       }
       case 3: {
-        filterCards.value = cards.value.filter((elem) => elem.category === 'jewelery')
+        filterCards.value = products.cards.filter((elem) => elem.category === 'jewelery')
         break
       }
       case 4: {
-        filterCards.value = cards.value.filter((elem) => elem.category === 'electronics')
+        filterCards.value = products.cards.filter((elem) => elem.category === 'electronics')
         break
       }
       case 2: {
-        filterCards.value = cards.value.filter((elem) => elem.category === "women's clothing")
+        filterCards.value = products.cards.filter((elem) => elem.category === "women's clothing")
         break
       }
       default: {
@@ -51,28 +52,25 @@ const selectItem = (item?: Category) => {
   }
 }
 
-const filteredCards = computed(() => {
+const filteredCards = computed((): Product[] => {
   if (category.value) {
     return filterCards.value
   } else if (searchQuery.value) {
     return searchData()
   } else {
-    return cards.value
+    return products.cards
   }
 })
 
 const searchData = () => {
   if(searchQuery.value) {
-    filterCards.value = cards.value.filter((elem) => {
+    filterCards.value = products.cards.filter((elem) => {
       return elem.title.toLowerCase().indexOf(searchQuery.value.trim().toLowerCase()) > -1
     })
   }
     return filterCards.value
 }
 
-onMounted(() => {
-  loadData()
-})
 </script>
 
 <template>
@@ -91,18 +89,15 @@ onMounted(() => {
         </div>
         <PilotSelect :dataSelect="categories" @selectItem="selectItem" />
       </div>
-      <div v-if="filteredCards" class="pilot-cards__cards">
-        <div v-for="card in filteredCards" :key="card?.id">
-          <PilotCard :card="card"></PilotCard>
+      <div v-if="getProducts.length <=0" class="pilot-cards__loader">
+        <PilotLoader />
+      </div>
+      <div v-else class="pilot-cards__cards">
+        <div v-for="elem in filteredCards" :key="elem?.id">
+          <PilotCard :card="elem"></PilotCard>
         </div>
       </div>
-      <div v-else class="pilot-cards__loader">
-        <div class="lds-facebook">
-          <div></div>
-          <div></div>
-          <div></div>
-        </div>
-      </div>
+      
       <div v-if="searchQuery && filterCards.length <= 0" class="pilot-cards__nothing">
         Ничего не найдено
       </div>
@@ -111,44 +106,6 @@ onMounted(() => {
 </template>
 
 <style lang="scss" scoped>
-.lds-facebook {
-  display: inline-block;
-  position: relative;
-  width: 80px;
-  height: 80px;
-}
-.lds-facebook div {
-  display: inline-block;
-  position: absolute;
-  left: 8px;
-  width: 16px;
-  background: #00a768;
-  animation: lds-facebook 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
-}
-.lds-facebook div:nth-child(1) {
-  left: 8px;
-  animation-delay: -0.24s;
-}
-.lds-facebook div:nth-child(2) {
-  left: 32px;
-  animation-delay: -0.12s;
-}
-.lds-facebook div:nth-child(3) {
-  left: 56px;
-  animation-delay: 0;
-}
-@keyframes lds-facebook {
-  0% {
-    top: 8px;
-    height: 64px;
-  }
-  50%,
-  100% {
-    top: 24px;
-    height: 32px;
-  }
-}
-
 .pilot-cards {
   padding: 0 12px;
 
