@@ -3,7 +3,7 @@ import { ref, computed } from 'vue'
 import PilotCard from '@/shared/ui/PilotCard.vue'
 import PilotSelect from '../shared/ui/PilotSelect.vue'
 import PilotMainContainer from '../shared/ui/PilotMainContainer.vue'
-import PilotLoader from '../shared/ui/PilotLoader.vue'
+import CardSceleton from '../shared/ui/CardSceleton.vue'
 import { useCardsStore } from '@/app/stores/cards'
 import CATEGORY from '@/shared/constants/category'
 import { type Product } from '@/entities/Product'
@@ -89,15 +89,14 @@ const searchData = () => {
         </div>
         <PilotSelect :dataSelect="categories" @selectItem="selectItem" />
       </div>
-      <div v-if="getProducts.length <=0" class="pilot-cards__loader">
-        <PilotLoader />
+      <div v-if="getProducts.length <=0" class="pilot-cards__cards">
+        <CardSceleton v-for="(elem, index) in 6" :key="index"/>
       </div>
       <div v-else class="pilot-cards__cards">
         <div v-for="elem in filteredCards" :key="elem?.id">
           <PilotCard :card="elem"></PilotCard>
         </div>
       </div>
-      
       <div v-if="searchQuery && filterCards.length <= 0" class="pilot-cards__nothing">
         Ничего не найдено
       </div>
