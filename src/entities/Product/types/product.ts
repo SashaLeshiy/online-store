@@ -4,5 +4,9 @@ export interface Product {
     id: number,
     image: string,
     price: number,
-    title: string
+    title: string,
+    rating: {
+      count: number,
+      rate: number
+    }
   }

@@ -1,17 +1,21 @@
 import { defineStore } from 'pinia'
 import { type Product } from '@/entities/Product'
+import { ref } from 'vue'
 
-export const useCardsStore = defineStore('cardsStore', {
-    state: () => ({
-        loader: <boolean>false,
-        cards: <Product[]>[]
-    }),
-    actions: {
-        async getCards() {
-            this.loader = true
-            const res = await fetch('https://fakestoreapi.com/products')
-            this.cards = await res.json()
-            this.loader = false
-        }
+export const useCardsStore = defineStore('cardsStore', () => {
+    const loader = ref<boolean>(false)
+    const cards = ref<Product[]>([])
+    
+    const getCards = async () => {
+        loader.value = true
+        const res = await fetch('https://fakestoreapi.com/products')
+        cards.value = await res.json()
+        loader.value = false
+    }
+
+    return {
+        loader,
+        cards,
+        getCards
     }
 })

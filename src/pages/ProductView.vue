@@ -141,9 +141,17 @@ defineComponent({
                     {{ product.description}}
                 </h3>
             </div>
+            <div class="product-view__middle">
+                <div class="product-view__middle-rate">
+                    Рейтинг: <span class="product-view__middle-numbers">{{ product.rating.rate }}</span>
+                </div>
+                <div class="product-view__middle-count">
+                    Оценили: <span class="product-view__middle-numbers">{{ product.rating.count }}</span>
+                </div>
+            </div>
             <div class="product-view__footer">
                 <h3 class="product-view__price">
-                    Цена: $ {{ product.price}}
+                    Цена: <span class="product-view__price-number">$ {{ product.price}}</span>
                 </h3>
                 <PilotButton
                     v-if="isProductCart(product.id)"
@@ -205,6 +213,7 @@ defineComponent({
         justify-items: center;
         grid-template-columns: 20px;
         grid-template-columns: 40% 1fr;
+        grid-column-gap: 20px;
         padding: 40px;
     }
 
@@ -266,10 +275,32 @@ defineComponent({
       cursor: pointer;
     }
 
+    &__middle {
+        display: flex;
+        padding-top: 10px;
+        padding-bottom: 24px;
+    }
+
+    &__middle-rate {
+        margin-right: 20px;
+    }
+
+    &__middle-numbers {
+        color: #00A768;
+        font-style: italic;
+    }
+
     &__footer {
         display: flex;
         justify-content: space-between;
         align-items: center;
+    }
+
+    &__price-number {
+        color: #00A768;
+        font-weight: 700;
+        font-size: 18px;
+        line-height: 24px;
     }
 }
 </style>
