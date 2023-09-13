@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, type Ref } from 'vue'
+import type { Store, _UnwrapAll } from 'pinia'
 import PilotCard from '@/shared/ui/PilotCard.vue'
 import PilotSelect from '../shared/ui/PilotSelect.vue'
 import PilotMainContainer from '../shared/ui/PilotMainContainer.vue'
@@ -9,19 +10,18 @@ import CATEGORY from '@/shared/constants/category'
 import { type Product } from '@/entities/Product'
 import { type Category } from '@/entities/Category'
 
+const products: Store<"cardsStore", _UnwrapAll<Pick<{ loader: Ref<boolean>; cards: Ref<{ category: string; description: string; id: number; image: string; price: number; title: string; rating: { count: number; rate: number } }[]>; getCards: () => Promise<void> }, "loader" | "cards">>, Pick<{ loader: Ref<boolean>; cards: Ref<{ category: string; description: string; id: number; image: string; price: number; title: string; rating: { count: number; rate: number } }[]>; getCards: () => Promise<void> }, never>, Pick<{ loader: Ref<boolean>; cards: Ref<{ category: string; description: string; id: number; image: string; price: number; title: string; rating: { count: number; rate: number } }[]>; getCards: () => Promise<void> }, "getCards">> = useCardsStore()
+products.getCards()
+
 const searchQuery = ref('')
 const categories = ref<Category[]>(CATEGORY)
 const category = ref()
 const filterCards = ref<Product[]>([])
 
-const products = useCardsStore()
-
-products.getCards()
-
-
 const getProducts = computed((): Product[] => {
   return products.cards
 })
+
 
 const selectItem = (item?: Category) => {
   if (item) {
