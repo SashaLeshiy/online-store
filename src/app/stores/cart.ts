@@ -16,7 +16,12 @@ import { ref } from 'vue'
 // })
 
 export const useCartStore = defineStore('cartStore', () => {
-    const cart = ref<number>(JSON.parse(localStorage.getItem('cart')!).length)
+    const cart = ref<number>()
+
+    if(localStorage.getItem('cart')) {
+        cart.value = JSON.parse(localStorage.getItem('cart')!).length
+    }
+    
 
     const setCart = () => {
         cart.value = JSON.parse(localStorage.getItem('cart')!).length
