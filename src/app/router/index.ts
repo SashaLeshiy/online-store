@@ -25,6 +25,16 @@ const router = createRouter({
       component: () => import('@/pages/CartView.vue')
     },
     {
+      path: '/payment',
+      name: 'payment',
+      component: () => import('@/pages/PaymentView.vue')
+    },
+    {
+      path: '/check',
+      name: 'check',
+      component: () => import('@/pages/CheckView.vue')
+    },
+    {
       path: '/:pathMatch(.*)*',
       name: '/404',
       component: () => import('@/pages/404View.vue')

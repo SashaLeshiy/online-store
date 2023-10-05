@@ -2,12 +2,19 @@
   <button
     type="button"
     class="pilot-button"
+    :disabled="props.disabled"
   >
   <slot></slot>
   </button>
 </template>
 
 <script setup lang="ts">
+const props = defineProps({
+  disabled: {
+    type: Boolean,
+    default: false
+  }
+})
 </script>
 
 <style lang="scss" scoped>
@@ -34,6 +41,12 @@
     &:hover {
       cursor: pointer;
       opacity: 0.7;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: none;
+      pointer-events: none;
     }
 }
 </style>

@@ -1,5 +1,5 @@
 # Online Store
-## Products card, Basket (add, remove), Search, Slider images, Sorting category 
+## Products card, Basket (add, remove), Search, Slider images, Sorting category, Payment by Cards with validation
 
 - Vue 3
 - Vite

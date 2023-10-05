@@ -5,6 +5,7 @@ import PilotMainContainer from '../shared/ui/PilotMainContainer.vue'
 import PilotButton from '@/shared/ui/PilotButton.vue'
 import removeCard from '@/shared/utils/removeCard'
 import { type Product } from '@/entities/Product'
+import router from '@/app/router'
 
 defineComponent({
   PilotMainContainer,
@@ -25,37 +26,43 @@ const removeCardInCart = (id: number) => {
 
 const setTotalPrice = computed(() => {
   let totalPrice: number = 0
-  products.value.forEach((elem: { price: number; }) => {
+  products.value.forEach((elem: { price: number }) => {
     totalPrice += elem.price
   })
   return totalPrice.toFixed(2)
 })
+
+const goToPay = () => {
+  router.push({ path: 'payment' })
+}
+
 </script>
 <template>
   <PilotMainContainer class="cart-view__container">
     <div class="cart-view">
-      <h1 class="cart-view__title">Корзина - {{ products.length }}</h1>
-      <div v-if="products.length > 0" class="cart-view__products">
-        <div
-          v-for="product in products"
-          :key="product.id"
-          class="cart-view__products-element"
-        >
-          <div class="cart-view__products-element--image">
-            <img :src="product.image" class="cart-view__products-element--img" />
+      <div v-if="products && products.length > 0">
+        <h1 class="cart-view__title">Корзина - {{ products.length || 0 }}</h1>
+        <div class="cart-view__products">
+          <div v-for="product in products" :key="product.id" class="cart-view__products-element">
+            <div class="cart-view__products-element--image">
+              <img :src="product.image" class="cart-view__products-element--img" />
+            </div>
+            <h2 class="cart-view__products-element--title">
+              {{ product.title }}
+            </h2>
+            <h3 class="cart-view__products-element--price">$ {{ product.price }}</h3>
+            <PilotButton
+              @click="removeCardInCart(product.id)"
+              class="cart-view__products-element--button"
+            >
+              Из корзины
+            </PilotButton>
           </div>
-          <h2 class="cart-view__products-element--title">
-            {{ product.title }}
-          </h2>
-          <h3 class="cart-view__products-element--price">$ {{ product.price }}</h3>
-          <PilotButton
-            @click="removeCardInCart(product.id)"
-            class="cart-view__products-element--button"
-          >
-            Из корзины
-          </PilotButton>
+          <div class="cart-view__footer">
+            <h2 class="cart-view__footer-total">Общая стоимость: $&nbsp;{{ setTotalPrice }}</h2>
+            <PilotButton class="cart-view__footer-button" @click="goToPay()">Оплатить</PilotButton>
+          </div>
         </div>
-        <h2>Общая стоимость: $&nbsp;{{ setTotalPrice }}</h2>
       </div>
       <div v-else class="cart-view__title">Ваша корзина пуста</div>
     </div>
@@ -111,6 +118,16 @@ const setTotalPrice = computed(() => {
   &__products-element--button {
     justify-self: center;
     max-width: 136px;
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__footer-button {
+    max-height: 40px;
   }
 }
 </style>
