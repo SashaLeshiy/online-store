@@ -93,9 +93,9 @@ const searchData = () => {
         <CardSceleton v-for="(elem, index) in 6" :key="index"/>
       </div>
       <div v-else class="pilot-cards__cards">
-        <div v-for="elem in filteredCards" :key="elem?.id">
+        <template v-for="elem in filteredCards" :key="elem?.id">
           <PilotCard :card="elem"></PilotCard>
-        </div>
+        </template>
       </div>
       <div v-if="searchQuery && filterCards.length <= 0" class="pilot-cards__nothing">
         Ничего не найдено
@@ -202,6 +202,7 @@ const searchData = () => {
     display: flex;
     flex-direction: column;
     align-items: center;
+    row-gap: 12px;
     padding-bottom: 12px;
 
     @media screen and (min-width: 620px) {
