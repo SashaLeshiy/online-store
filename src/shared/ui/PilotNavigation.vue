@@ -30,7 +30,12 @@ const toggleModal = () => {
           class="pilot-navigation__button"
           :class="[isActive && 'pilot-navigation__button-active']"
         >
-          {{ item.name }}<sup class="pilot-navigation__button-sup" v-if="item.name === 'Корзина' && storeCart.cart">{{ storeCart.cart }}</sup>
+          {{ item.name }}
+           <div class="pilot-navigation__button-cart">
+            <p class="pilot-navigation__button-quantity">
+              {{ storeCart.cart }}
+            </p>
+           </div>
         </button>
       </router-link>
     </div>
@@ -49,6 +54,7 @@ const toggleModal = () => {
   }
 
   &__button {
+    position: relative;
     padding: 0;
     font-weight: 400;
     font-size: 16px;
@@ -68,8 +74,25 @@ const toggleModal = () => {
     color: #00a76b;
   }
 
-  &__button-sup {
-    color: #db1c1c
+  &__button-cart {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: -1;
+    width: 16px;
+    height: 16px;
+    background-color: #7b080c;
+    border-radius: 50%;
+  }
+
+  &__button-quantity {
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 12px;
   }
 
   &__icon {

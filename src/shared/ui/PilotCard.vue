@@ -72,14 +72,11 @@ const removeCardInCart = (id: number) => {
           {{ card.title }}
         </h3>
         <div class="pilot-card__rating">
+          <span class="pilot-card__rate">{{ card.rating.rate }}</span>
+          <span class="pilot-card__reviews">( {{ card.rating.count }} )</span>
           <div class="pilot-card__stars">
-            <span class="pilot-card__star">⭐</span>
-            <span class="pilot-card__star">⭐</span>
-            <span class="pilot-card__star">⭐</span>
-            <span class="pilot-card__star">⭐</span>
-            <span class="pilot-card__star">⭐</span>
+            <span class="pilot-card__star">👍</span>
           </div>
-          <span class="pilot-card__reviews">(128)</span>
         </div>
       </div>
     </router-link>
@@ -160,7 +157,7 @@ const removeCardInCart = (id: number) => {
   &__image {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     transition: all 0.3s ease;
   }
 
@@ -232,13 +229,22 @@ const removeCardInCart = (id: number) => {
   }
 
   &__star {
+    color: #00a76b;
     font-size: 0.9rem;
-    opacity: 0.8;
+  }
+
+  &__rate {
+    color: #7b080c;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 20px;
   }
 
   &__reviews {
-    font-size: 0.85rem;
     color: #64748b;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 18px;
   }
 
   &__footer {
