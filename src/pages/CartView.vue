@@ -126,6 +126,10 @@ const goToPay = () => {
     max-width: 1200px;
     margin: 0 auto;
     padding: 32px 24px;
+
+    @media (max-width: 768px) {
+      padding: 24px 16px;
+    }
   }
 
   &__header {
@@ -143,6 +147,16 @@ const goToPay = () => {
     justify-content: center;
     gap: 12px;
     margin: 0;
+
+    @media (max-width: 768px) {
+      font-size: 2rem;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    @media (max-width: 480px) {
+      font-size: 1.75rem;
+    }
   }
 
   &__title-icon {
@@ -179,6 +193,13 @@ const goToPay = () => {
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
       transform: translateY(-2px);
     }
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      text-align: center;
+      gap: 16px;
+      padding: 20px;
+    }
   }
 
   &__product-image {
@@ -188,6 +209,11 @@ const goToPay = () => {
     border-radius: 12px;
     overflow: hidden;
     background: #f8fafc;
+
+    @media (max-width: 480px) {
+      width: 60px;
+      height: 60px;
+    }
   }
 
   &__product-img {
@@ -199,6 +225,10 @@ const goToPay = () => {
   &__product-info {
     flex: 1;
     min-width: 0;
+
+    @media (max-width: 768px) {
+      width: 100%;
+    }
   }
 
   &__product-title {
@@ -251,12 +281,23 @@ const goToPay = () => {
     justify-content: space-between;
     align-items: center;
     gap: 20px;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      text-align: center;
+      gap: 20px;
+    }
   }
 
   &__total {
     display: flex;
     align-items: center;
     gap: 12px;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      gap: 8px;
+    }
   }
 
   &__total-label {
@@ -285,6 +326,10 @@ const goToPay = () => {
     &:hover {
       transform: translateY(-2px);
       box-shadow: 0 6px 20px rgba(0, 167, 107, 0.4);
+    }
+
+    @media (max-width: 480px) {
+      width: 100%;
     }
   }
 
@@ -332,57 +377,12 @@ const goToPay = () => {
       transform: translateY(-2px);
       box-shadow: 0 6px 20px rgba(0, 167, 107, 0.4);
     }
-  }
 
-  // Адаптивность
-  @media (max-width: 768px) {
-    &__content {
-      padding: 24px 16px;
-    }
-
-    &__title {
-      font-size: 2rem;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    &__product {
-      flex-direction: column;
-      text-align: center;
-      gap: 16px;
-      padding: 20px;
-    }
-
-    &__product-info {
-      width: 100%;
-    }
-
-    &__summary {
-      flex-direction: column;
-      text-align: center;
-      gap: 20px;
-    }
-
-    &__total {
-      flex-direction: column;
-      gap: 8px;
-    }
-  }
-
-  @media (max-width: 480px) {
-    &__title {
-      font-size: 1.75rem;
-    }
-
-    &__product-image {
-      width: 60px;
-      height: 60px;
-    }
-
-    &__checkout-btn,
-    &__empty-btn {
+    @media (max-width: 480px) {
       width: 100%;
     }
   }
+
+  // Адаптивность перенесена во вложенные блоки выше
 }
 </style>

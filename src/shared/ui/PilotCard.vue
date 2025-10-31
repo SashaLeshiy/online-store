@@ -1,17 +1,19 @@
 <script setup lang="ts">
-import { ref, type PropType } from 'vue'
+import { ref, computed, type PropType } from 'vue'
 import { useCartStore } from '@/app/stores/cart'
 import addCard from '@/shared/utils/addCart'
 import removeCard from '@/shared/utils/removeCard'
 import PilotButton from '@/shared/ui/PilotButton.vue'
 import { type Product } from '@/entities/Product'
 
-defineProps({
+const props = defineProps({
   card: {
     type: Object as PropType<Product>,
     required: true
   }
 })
+
+const card = computed(() => props.card)
 
 const storeCart = useCartStore()
 
@@ -36,6 +38,39 @@ const getImgUrl = (imageName: string) => {
   return url
 }
 
+// Карусель изображений: используем три слайда (сейчас одинаковые)
+const images = computed<string[]>(() => {
+  const img = card.value?.image
+  return img ? [img, img, img] : []
+})
+
+const currentIndex = ref(0)
+
+const onMouseMove = (event: MouseEvent) => {
+  const wrapper = event.currentTarget as HTMLElement
+  if (!wrapper || images.value.length === 0) return
+
+  const rect = wrapper.getBoundingClientRect()
+  const x = event.clientX - rect.left
+  const segmentWidth = rect.width / images.value.length
+  const index = Math.min(
+    images.value.length - 1,
+    Math.max(0, Math.floor(x / segmentWidth))
+  )
+  currentIndex.value = index
+}
+
+const goToSlide = (index: number) => {
+  if (index < 0 || index >= images.value.length) return
+  currentIndex.value = index
+}
+
+const currentFlipClass = computed(() => {
+  if (currentIndex.value === 1) return 'pilot-card__image-holder--flip-x'
+  if (currentIndex.value === 2) return 'pilot-card__image-holder--flip-y'
+  return ''
+})
+
 const addCardInCart = (card: Product) => {
   addCard(card)
   cart.value = JSON.parse(localStorage.getItem('cart')!)
@@ -52,19 +87,27 @@ const removeCardInCart = (id: number) => {
 <template>
   <div class="pilot-card">
     <router-link :to="`/products/${card.id}`" class="pilot-card__link">
-      <div class="pilot-card__image-wrapper">
+      <div class="pilot-card__image-wrapper" @mousemove="onMouseMove">
         <div class="pilot-card__badge" v-if="isProductCart(card.id)">
           В корзине ✓
         </div>
-        <img 
-          v-if="card.image" 
-          :src="card.image" 
-          @error="altImg" 
-          class="pilot-card__image" 
-          :alt="card.title"
-        />
-        <div class="pilot-card__image-overlay">
-          <span class="pilot-card__view-text">Посмотреть</span>
+        <div class="pilot-card__image-holder" :class="currentFlipClass" v-if="images.length">
+          <img 
+            :src="images[currentIndex]" 
+            @error="altImg" 
+            class="pilot-card__image" 
+            :alt="card.title"
+          />
+        </div>
+        <div class="pilot-card__paginator">
+          <button
+            v-for="(img, i) in images"
+            :key="i"
+            class="pilot-card__dot"
+            :class="{ 'pilot-card__dot--active': i === currentIndex }"
+            @click.stop="goToSlide(i)"
+            :aria-label="`Изображение ${i + 1}`"
+          />
         </div>
       </div>
       <div class="pilot-card__content">
@@ -73,7 +116,7 @@ const removeCardInCart = (id: number) => {
         </h3>
         <div class="pilot-card__rating">
           <span class="pilot-card__rate">{{ card.rating.rate }}</span>
-          <span class="pilot-card__reviews">( {{ card.rating.count }} )</span>
+          <span class="pilot-card__reviews">( {{ card.rating.count }} отзывов)</span>
           <div class="pilot-card__stars">
             <span class="pilot-card__star">👍</span>
           </div>
@@ -138,6 +181,14 @@ const removeCardInCart = (id: number) => {
     border-radius: 12px;
     overflow: hidden;
     background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+
+    @media (max-width: 768px) {
+      height: 180px;
+    }
+
+    @media (max-width: 480px) {
+      height: 160px;
+    }
   }
 
   &__badge {
@@ -161,38 +212,57 @@ const removeCardInCart = (id: number) => {
     transition: all 0.3s ease;
   }
 
-  &__image-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
+  &__image-holder {
     width: 100%;
     height: 100%;
-    background: rgba(0, 167, 107, 0.9);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: all 0.3s ease;
+    display: block;
   }
 
-  &__view-text {
-    color: white;
-    font-weight: 600;
-    font-size: 1.1rem;
-    transform: translateY(10px);
-    transition: all 0.3s ease;
+  &__image-holder--flip-x {
+    transform: scaleX(-1);
   }
 
-  &__image-wrapper:hover &__image-overlay {
-    opacity: 1;
-  }
-
-  &__image-wrapper:hover &__view-text {
-    transform: translateY(0);
+  &__image-holder--flip-y {
+    transform: scaleY(-1);
   }
 
   &__image-wrapper:hover &__image {
     transform: scale(1.05);
+  }
+
+  &__paginator {
+    position: absolute;
+    bottom: 8px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    z-index: 2;
+    padding: 0 8px;
+  }
+
+  &__dot {
+    flex: 1 1 0;
+    height: 4px;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.5);
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    outline: none;
+    transition: background 0.2s ease, height 0.2s ease, opacity 0.2s ease;
+    appearance: none;
+
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+
+  &__dot--active {
+    background: #00a76b;
+    height: 6px;
   }
 
   &__content {
@@ -211,6 +281,10 @@ const removeCardInCart = (id: number) => {
     overflow: hidden;
     height: 2.8em;
     transition: color 0.2s ease;
+
+    @media (max-width: 480px) {
+      font-size: 1rem;
+    }
   }
 
   &__link:hover &__title {
@@ -252,6 +326,12 @@ const removeCardInCart = (id: number) => {
     align-items: center;
     justify-content: space-between;
     gap: 12px;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 12px;
+    }
   }
 
   &__price {
@@ -259,6 +339,15 @@ const removeCardInCart = (id: number) => {
     font-size: 1.4rem;
     color: #00a76b;
     flex-shrink: 0;
+
+    @media (max-width: 768px) {
+      text-align: center;
+      font-size: 1.3rem;
+    }
+
+    @media (max-width: 480px) {
+      font-size: 1.2rem;
+    }
   }
 
   &__actions {
@@ -272,6 +361,16 @@ const removeCardInCart = (id: number) => {
     font-size: 0.9rem;
     transition: all 0.2s ease;
     white-space: nowrap;
+
+    @media (max-width: 768px) {
+      width: 100%;
+      justify-content: center;
+    }
+
+    @media (max-width: 480px) {
+      padding: 8px 12px;
+      font-size: 0.85rem;
+    }
 
     &--add {
       background: linear-gradient(135deg, #00a76b 0%, #00c853 100%);
@@ -302,51 +401,13 @@ const removeCardInCart = (id: number) => {
     font-size: 0.9rem;
   }
 
-  // Адаптивность
   @media (max-width: 768px) {
     padding: 16px;
     max-width: 100%;
-
-    &__image-wrapper {
-      height: 180px;
-    }
-
-    &__footer {
-      flex-direction: column;
-      align-items: stretch;
-      gap: 12px;
-    }
-
-    &__price {
-      text-align: center;
-      font-size: 1.3rem;
-    }
-
-    &__button {
-      width: 100%;
-      justify-content: center;
-    }
   }
 
   @media (max-width: 480px) {
     padding: 12px;
-
-    &__image-wrapper {
-      height: 160px;
-    }
-
-    &__title {
-      font-size: 1rem;
-    }
-
-    &__price {
-      font-size: 1.2rem;
-    }
-
-    &__button {
-      padding: 8px 12px;
-      font-size: 0.85rem;
-    }
   }
 }
 </style>
