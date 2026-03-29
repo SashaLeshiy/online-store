@@ -8,5 +8,7 @@ export interface Product {
     rating: {
       count: number,
       rate: number
-    }
+    },
+    createdAt?: string
+    updatedAt?: string
   }

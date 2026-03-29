@@ -11,6 +11,7 @@ import removeCard from '@/shared/utils/removeCard'
 import PilotButton from '@/shared/ui/PilotButton.vue'
 import PilotMainContainer from '../shared/ui/PilotMainContainer.vue'
 import { type Product } from '@/entities/Product'
+// import { API_ENDPOINTS } from '@/config/api'
 
 
 defineComponent({
@@ -38,6 +39,25 @@ defineComponent({
             })
             .catch(error => console.log(error.maessage))
     }
+
+    // const loadData = async () => {
+    //     try {
+    //         const response = await fetch(API_ENDPOINTS.productById(route.params.id))
+            
+    //         if (!response.ok) {
+    //             throw new Error(`Товар не найден (${response.status})`)
+    //         }
+            
+    //         product.value = await response.json()
+    //     } catch (error) {
+    //         // Проверяем тип ошибки
+    //         if (error instanceof Error) {
+    //             console.error('Ошибка загрузки товара:', error.message)
+    //         } else {
+    //             console.error('Неизвестная ошибка:', error)
+    //         }
+    //     }
+    // }
 
     onMounted(() => {
         loadData()

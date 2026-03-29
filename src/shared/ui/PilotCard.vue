@@ -38,7 +38,6 @@ const getImgUrl = (imageName: string) => {
   return url
 }
 
-// Карусель изображений: используем три слайда (сейчас одинаковые)
 const images = computed<string[]>(() => {
   const img = card.value?.image
   return img ? [img, img, img] : []
