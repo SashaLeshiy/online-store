@@ -1,17 +1,14 @@
 <script setup lang="ts">
-import { ref, computed, type PropType } from 'vue'
+import { ref, computed } from 'vue'
 import { useCartStore } from '@/app/stores/cart'
 import addCard from '@/shared/utils/addCart'
 import removeCard from '@/shared/utils/removeCard'
 import PilotButton from '@/shared/ui/PilotButton.vue'
 import { type Product } from '@/entities/Product'
 
-const props = defineProps({
-  card: {
-    type: Object as PropType<Product>,
-    required: true
-  }
-})
+const props = defineProps<{
+  card: Product
+}>()
 
 const card = computed(() => props.card)
 
@@ -29,18 +26,13 @@ const isProductCart = (id: number) => {
   return Boolean(cardInCart)
 }
 
-const altImg = (event: Event) => {
-  (event.target as HTMLImageElement).src = getImgUrl('error_photo.jpg')
-}
-
-const getImgUrl = (imageName: string) => {
-  let url = new URL(`../shared/assets/images/${imageName}`, import.meta.url).pathname
-  return url
-}
-
 const images = computed<string[]>(() => {
-  const img = card.value?.image
-  return img ? [img, img, img] : []
+  
+  return [
+    `${import.meta.env.VITE_API_URL}/products/${props.card.id}/images/0/original`,
+    `${import.meta.env.VITE_API_URL}/products/${props.card.id}/images/1/original`,
+    `${import.meta.env.VITE_API_URL}/products/${props.card.id}/images/2/original`,
+  ]
 })
 
 const currentIndex = ref(0)
@@ -64,9 +56,11 @@ const goToSlide = (index: number) => {
   currentIndex.value = index
 }
 
-const currentFlipClass = computed(() => {
-  if (currentIndex.value === 1) return 'pilot-card__image-holder--flip-x'
-  if (currentIndex.value === 2) return 'pilot-card__image-holder--flip-y'
+// Текущее изображение
+const currentImageUrl = computed(() => {
+  if (images.value.length > 0 && images.value[currentIndex.value]) {
+    return images.value[currentIndex.value]
+  }
   return ''
 })
 
@@ -90,15 +84,14 @@ const removeCardInCart = (id: number) => {
         <div class="pilot-card__badge" v-if="isProductCart(card.id)">
           В корзине ✓
         </div>
-        <div class="pilot-card__image-holder" :class="currentFlipClass" v-if="images.length">
+        <div class="pilot-card__image-holder">
           <img 
-            :src="images[currentIndex]" 
-            @error="altImg" 
+            :src="currentImageUrl"
             class="pilot-card__image" 
             :alt="card.title"
           />
         </div>
-        <div class="pilot-card__paginator">
+        <div class="pilot-card__paginator" v-if="images.length > 1">
           <button
             v-for="(img, i) in images"
             :key="i"

@@ -33,6 +33,10 @@ const setTotalPrice = computed(() => {
 const goToPay = () => {
   router.push({ path: 'payment' })
 }
+
+const productImage = (url: string) => {
+  return `${import.meta.env.VITE_API_URL}${url}`
+}
 </script>
 
 <template>
@@ -55,7 +59,7 @@ const goToPay = () => {
           >
             <div class="cart-view__product-image">
               <img 
-                :src="product.image" 
+                :src="productImage(product.images[0].urls.original)" 
                 :alt="product.title"
                 class="cart-view__product-img" 
               />

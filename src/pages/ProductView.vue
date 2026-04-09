@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, defineComponent } from 'vue'
+import { onMounted, ref, defineComponent } from 'vue'
 import { useCartStore } from '@/app/stores/cart'
 import { useRoute } from 'vue-router';
 import { Swiper, SwiperSlide } from 'swiper/vue';
@@ -11,7 +11,7 @@ import removeCard from '@/shared/utils/removeCard'
 import PilotButton from '@/shared/ui/PilotButton.vue'
 import PilotMainContainer from '../shared/ui/PilotMainContainer.vue'
 import { type Product } from '@/entities/Product'
-// import { API_ENDPOINTS } from '@/config/api'
+import { API_ENDPOINTS } from '@/config/api'
 
 
 defineComponent({
@@ -29,35 +29,24 @@ defineComponent({
     const route = useRoute()
     const product = ref<Product>()
     const openDescription = ref(false)
-    const isLoaded = ref(false)
 
-    const loadData = () => {
-        fetch(`https://fakestoreapi.com/products/${route.params.id}`)
-            .then(res=> res.json())
-            .then(json=> {
-                product.value = json
-            })
-            .catch(error => console.log(error.maessage))
+    const loadData = async () => {
+        try {
+            const response = await fetch(API_ENDPOINTS.productById(Number(route.params.id)))
+            
+            if (!response.ok) {
+                throw new Error(`Товар не найден (${response.status})`)
+            }
+            
+            product.value = await response.json()
+        } catch (error) {
+            if (error instanceof Error) {
+                console.error('Ошибка загрузки товара:', error.message)
+            } else {
+                console.error('Неизвестная ошибка:', error)
+            }
+        }
     }
-
-    // const loadData = async () => {
-    //     try {
-    //         const response = await fetch(API_ENDPOINTS.productById(route.params.id))
-            
-    //         if (!response.ok) {
-    //             throw new Error(`Товар не найден (${response.status})`)
-    //         }
-            
-    //         product.value = await response.json()
-    //     } catch (error) {
-    //         // Проверяем тип ошибки
-    //         if (error instanceof Error) {
-    //             console.error('Ошибка загрузки товара:', error.message)
-    //         } else {
-    //             console.error('Неизвестная ошибка:', error)
-    //         }
-    //     }
-    // }
 
     onMounted(() => {
         loadData()
@@ -85,10 +74,6 @@ defineComponent({
         storeCart.setCart()
     }
 
-    const onImgLoad = () => {
-        isLoaded.value = true
-    }
-
     const altImg = (event: Event) => {
         (event.target as HTMLImageElement).src = getImgUrl('error_photo.jpg')
     }
@@ -102,12 +87,9 @@ defineComponent({
         openDescription.value = !openDescription.value
     }
 
-    const classes = computed(() => {
-        return [
-            'product-view__img-loader',
-            !isLoaded.value && 'product-view__img-loader--active'
-        ]
-    })
+    const productImage = (url: string) => {
+        return `${import.meta.env.VITE_API_URL}${url}`
+    }
 
 </script>
 
@@ -116,7 +98,7 @@ defineComponent({
   <div class="product-view">
         <div v-if="product" class="product-view__slider">
             <swiper
-                v-if="product.image"
+                v-if="product.images"
                 :style="{
                 '--swiper-navigation-color': '#fff',
                 '--swiper-pagination-color': '#fff',
@@ -126,23 +108,8 @@ defineComponent({
                 :modules="modules"
                 class="product-view__swiper"
             >
-                <swiper-slide>
-                    <img :src="product.image" @error="altImg" class="product-view__img" />
-                </swiper-slide>
-                <swiper-slide>
-                    <img :src="product.image" @error="altImg" class="product-view__img" />
-                </swiper-slide>
-                <swiper-slide> 
-                    <!-- имитация загрузки битой картинки и замена на дефолтную -->
-                    <img
-                        src="https://leshiy.com/image.png" 
-                        @error="altImg"
-                        @load="onImgLoad()"
-                        class="product-view__img"
-                    />
-                    <div :class="classes">
-                        <div class="lds-facebook"><div></div><div></div><div></div></div>
-                    </div>
+                <swiper-slide v-for="image in product.images" :key="image.filename">
+                    <img :src="productImage(image.urls.original)" @error="altImg" class="product-view__img" />
                 </swiper-slide>
             </swiper>
         </div>

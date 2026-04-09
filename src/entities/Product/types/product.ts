@@ -1,8 +1,17 @@
+export interface ProductImage {
+  filename: string;
+  index: number;
+  urls: {
+    original: string;
+    thumbnail?: string;
+    medium?: string;
+  };
+}
 export interface Product {
     category: string,
     description: string,
     id: number,
-    image: string,
+    images: Array<ProductImage>,
     price: number,
     title: string,
     rating: {
@@ -11,4 +20,4 @@ export interface Product {
     },
     createdAt?: string
     updatedAt?: string
-  }
+}
