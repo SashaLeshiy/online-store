@@ -12,6 +12,7 @@ export interface Product {
     description: string,
     id: number,
     images: Array<ProductImage>,
+    mediumUrl?: string,
     price: number,
     title: string,
     rating: {

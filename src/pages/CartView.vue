@@ -34,8 +34,8 @@ const goToPay = () => {
   router.push({ path: 'payment' })
 }
 
-const productImage = (url: string) => {
-  return `${import.meta.env.VITE_API_URL}${url}`
+const productImage = (product: Product) => {
+  return `${import.meta.env.VITE_API_URL}${product?.mediumUrl}`
 }
 </script>
 
@@ -59,7 +59,7 @@ const productImage = (url: string) => {
           >
             <div class="cart-view__product-image">
               <img 
-                :src="productImage(product.images[0].urls.original)" 
+                :src="productImage(product)" 
                 :alt="product.title"
                 class="cart-view__product-img" 
               />
