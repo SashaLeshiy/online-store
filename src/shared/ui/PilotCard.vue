@@ -27,11 +27,10 @@ const isProductCart = (id: number) => {
 }
 
 const images = computed<string[]>(() => {
-  
   return [
-    `${import.meta.env.VITE_API_URL}/products/${props.card.id}/images/0/original`,
-    `${import.meta.env.VITE_API_URL}/products/${props.card.id}/images/1/original`,
-    `${import.meta.env.VITE_API_URL}/products/${props.card.id}/images/2/original`,
+    `/api/products/${props.card.id}/images/0/original`,
+    `/api/products/${props.card.id}/images/1/original`,
+    `/api/products/${props.card.id}/images/2/original`
   ]
 })
 
@@ -44,10 +43,7 @@ const onMouseMove = (event: MouseEvent) => {
   const rect = wrapper.getBoundingClientRect()
   const x = event.clientX - rect.left
   const segmentWidth = rect.width / images.value.length
-  const index = Math.min(
-    images.value.length - 1,
-    Math.max(0, Math.floor(x / segmentWidth))
-  )
+  const index = Math.min(images.value.length - 1, Math.max(0, Math.floor(x / segmentWidth)))
   currentIndex.value = index
 }
 
@@ -81,15 +77,9 @@ const removeCardInCart = (id: number) => {
   <div class="pilot-card">
     <router-link :to="`/products/${card.id}`" class="pilot-card__link">
       <div class="pilot-card__image-wrapper" @mousemove="onMouseMove">
-        <div class="pilot-card__badge" v-if="isProductCart(card.id)">
-          В корзине ✓
-        </div>
+        <div class="pilot-card__badge" v-if="isProductCart(card.id)">В корзине ✓</div>
         <div class="pilot-card__image-holder">
-          <img 
-            :src="currentImageUrl"
-            class="pilot-card__image" 
-            :alt="card.title"
-          />
+          <img :src="currentImageUrl" class="pilot-card__image" :alt="card.title" />
         </div>
         <div class="pilot-card__paginator" v-if="images.length > 1">
           <button
@@ -127,9 +117,9 @@ const removeCardInCart = (id: number) => {
           <span class="pilot-card__button-icon">🗑️</span>
           Удалить
         </PilotButton>
-        <PilotButton 
-          v-else 
-          @click.stop="addCardInCart(card)" 
+        <PilotButton
+          v-else
+          @click.stop="addCardInCart(card)"
           class="pilot-card__button pilot-card__button--add"
           variant="primary"
         >
@@ -244,7 +234,10 @@ const removeCardInCart = (id: number) => {
     cursor: pointer;
     padding: 0;
     outline: none;
-    transition: background 0.2s ease, height 0.2s ease, opacity 0.2s ease;
+    transition:
+      background 0.2s ease,
+      height 0.2s ease,
+      opacity 0.2s ease;
     appearance: none;
 
     &:hover {
