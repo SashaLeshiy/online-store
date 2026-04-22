@@ -35,11 +35,42 @@ const router = createRouter({
       component: () => import('@/pages/CheckView.vue')
     },
     {
+      path: '/login',
+      name: 'login',
+      component: () => import('@/pages/LoginPage.vue'),
+      meta: { requiresGuest: true }
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: () => import('@/pages/RegisterPage.vue'),
+      meta: { requiresGuest: true }
+    },
+    {
+      path: '/profile',
+      name: 'profile',
+      component: () => import('@/pages/ProfilePage.vue'),
+      meta: { requiresAuth: true }
+    },
+    {
       path: '/:pathMatch(.*)*',
       name: '/404',
       component: () => import('@/pages/404View.vue')
-    },
+    }
   ]
+})
+
+router.beforeEach((to, from, next) => {
+  const token = localStorage.getItem('token')
+  const isAuthenticated = !!token
+
+  if (to.meta.requiresAuth && !isAuthenticated) {
+    next('/login')
+  } else if (to.meta.requiresGuest && isAuthenticated) {
+    next('/profile')
+  } else {
+    next()
+  }
 })
 
 export default router
